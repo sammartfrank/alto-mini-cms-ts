@@ -1,36 +1,27 @@
-'use client';
 import { useState, useEffect } from 'react';
 
 import { postsList } from './mocked';
-export enum PostMode {
-  Blog = 'blog',
-  Post = 'post',
-}
 
 export type PostType = {
   id: string;
   title: string;
   date: string;
   videoId: string | null;
-  mode: PostMode;
+  // could it be an enum or a const but flaky on tests
+  mode: string;
   description: string;
 };
 
-const usePosts = () => {
-  const [posts, setPosts] = useState<PostType[]>([]);
+export const usePosts = () => {
+  const [posts, setPosts] = useState<PostType[]>(() => {
+    if (typeof window === 'undefined') return postsList;
+    const postsFromLocalStorage = localStorage.getItem('posts');
+    return postsFromLocalStorage ? JSON.parse(postsFromLocalStorage) : postsList;
+  });
 
   useEffect(() => {
-    const postsFromLocalStorage = localStorage.getItem('posts');
-    if (postsFromLocalStorage) {
-      setPosts(JSON.parse(postsFromLocalStorage));
-    }
-    setPosts((posts) => {
-      if (posts.length === 0) {
-        return postsList;
-      }
-      return [...posts, ...postsList];
-    });
-  }, []);
+    localStorage.setItem('posts', JSON.stringify(posts));
+  }, [posts]);
 
   const addPost = (post: PostType) => {
     const updatedPosts = [...posts, post];
@@ -45,17 +36,15 @@ const usePosts = () => {
       }
       return post;
     });
-    setPosts(updatedPosts);
     localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    setPosts(updatedPosts);
   };
 
   const deletePost = (postId: string) => {
     const updatedPosts = posts.filter((post) => post.id !== postId);
-    setPosts(updatedPosts);
     localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    setPosts([...updatedPosts]);
   };
 
   return { posts, addPost, updatePost, deletePost };
 };
-
-export default usePosts;

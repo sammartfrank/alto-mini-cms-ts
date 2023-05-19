@@ -1,11 +1,12 @@
 'use client';
 
-import cuid from 'cuid';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
-import { PostMode, usePosts } from '../../../hooks/useLocalStorage';
+import { PostType, usePosts } from '../../../../hooks/useLocalStorage';
 
 const PostSchema = Yup.object().shape({
   title: Yup.string().required('Required'),
@@ -13,31 +14,42 @@ const PostSchema = Yup.object().shape({
   description: Yup.string().required('Required'),
 });
 
-export default function CreatePost() {
+export default function EditPost() {
+  const params = useParams();
   const router = useRouter();
-  const { addPost } = usePosts();
+  const { updatePost } = usePosts();
+
+  const { id } = params;
+  const [post, setPost] = useState<PostType | null>(null);
+
+  useEffect(() => {
+    const postsFromLocalStorage = localStorage.getItem('posts');
+    if (postsFromLocalStorage) {
+      const posts: PostType[] = JSON.parse(postsFromLocalStorage!);
+      const postToEdit = posts.find((post) => post.id === id);
+      if (postToEdit) setPost(postToEdit);
+    }
+  }, [id]);
 
   const formik = useFormik({
-    initialValues: { title: '', content: '', videoId: '', description: '' },
+    enableReinitialize: true,
+    initialValues: post || { title: '', content: '', videoId: '', description: '' },
     validationSchema: PostSchema,
     onSubmit: (values) => {
-      const payload = {
-        ...values,
-        id: cuid(),
-        date: new Date().toISOString(),
-        mode: PostMode.Post,
-      };
-
-      addPost(payload);
-      setTimeout(() => {
-        router.push('/');
-      }, 1000);
+      if (post) {
+        const updatedPost = {
+          ...post,
+          ...values,
+        };
+        updatePost(updatedPost);
+        router.push(`/post/${post.id}`);
+      }
     },
   });
 
   return (
-    <div className='w-full max-w-md mx-auto mt-4 h-screen flex justify-center flex-col items-center'>
-      <h1 className='text-2xl font-bold mb-4'>Create Post</h1>
+    <div className='w-full max-w-md mx-auto mt-4 h-screen flex flex-col items-center'>
+      <h1 className='text-2xl font-bold mb-4'>Update Post</h1>
       <form onSubmit={formik.handleSubmit}>
         <div className='mb-4'>
           <label className='block text-gray-700 text-sm font-bold mb-2 dark:text-white' htmlFor='title'>
@@ -64,6 +76,8 @@ export default function CreatePost() {
             className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
             name='description'
             id='description'
+            cols={30}
+            rows={20}
             value={formik.values.description}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -81,7 +95,7 @@ export default function CreatePost() {
             type='text'
             name='videoId'
             id='videoId'
-            value={formik.values.videoId}
+            value={formik.values.videoId ?? ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
@@ -89,14 +103,20 @@ export default function CreatePost() {
             <div className='text-red-500 dark:text-white my-2 text-xs italic'>{formik.errors.videoId}</div>
           ) : null}
         </div>
-
-        <button
-          type='submit'
-          disabled={formik.isSubmitting}
-          className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-        >
-          Submit
-        </button>
+        <div className='flex flex-col gap-4'>
+          <button
+            type='submit'
+            disabled={formik.isSubmitting}
+            className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+          >
+            Update
+          </button>
+          <Link href='/'>
+            <button className='w-full bg-zinc-500 hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+              Back
+            </button>
+          </Link>
+        </div>
       </form>
     </div>
   );

@@ -1,0 +1,5 @@
+{
+  "jest.jestCommandLine": "jest",
+  "jest.rootPath": "app",
+  "git.ignoreLimitWarning": true
+}
