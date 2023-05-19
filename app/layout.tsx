@@ -1,8 +1,9 @@
+import React from 'react';
 import { Inter } from 'next/font/google';
 import { Navbar } from '../components/Navbar';
+import Image from 'next/image';
 
 import './globals.css';
-import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 

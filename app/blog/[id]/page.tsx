@@ -1,24 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { MdCreate, MdDeleteOutline } from 'react-icons/md';
 
-import { PostType, usePosts } from '../../../hooks/useLocalStorage';
-
-const PostSchema = Yup.object().shape({
-  title: Yup.string().required('Required'),
-  videoId: Yup.string(),
-  description: Yup.string().required('Required'),
-});
+import { PostType } from '../../../hooks/useLocalStorage';
 
 export default function EditPost() {
   const params = useParams();
-  const router = useRouter();
-  const { updatePost } = usePosts();
 
   const { id } = params;
   const [post, setPost] = useState<PostType | null>(null);
@@ -31,22 +21,6 @@ export default function EditPost() {
       if (postToEdit) setPost(postToEdit);
     }
   }, [id]);
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: post || { title: '', content: '', videoId: '', description: '' },
-    validationSchema: PostSchema,
-    onSubmit: (values) => {
-      if (post) {
-        const updatedPost = {
-          ...post,
-          ...values,
-        };
-        updatePost(updatedPost);
-        router.push(`/blog/${post.id}`);
-      }
-    },
-  });
 
   return (
     <div className='w-full max-w-md mx-auto mt-4 h-screen flex flex-col items-center'>

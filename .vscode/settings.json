@@ -1,5 +1,6 @@
 {
   "jest.jestCommandLine": "jest",
   "jest.rootPath": "app",
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,5 +1,8 @@
-import { render, screen } from '@testing-library/react';
+'use client';
+
 import userEvent from '@testing-library/user-event';
+
+import { render, screen } from '@testing-library/react';
 
 import { PostsList } from '../components/Post/PostsList';
 
@@ -30,6 +33,9 @@ jest.mock('../hooks/useLocalStorage', () => ({
   }),
 }));
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
 test('Its rendering the posts and handling clicks correctly', () => {
   render(<PostsList />);
   for (let i = 1; i <= 2; i++) {

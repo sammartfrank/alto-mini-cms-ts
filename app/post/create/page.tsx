@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 
-import { PostMode, usePosts } from '../../../hooks/useLocalStorage';
+import { usePosts } from '../../../hooks/useLocalStorage';
 
 const PostSchema = Yup.object().shape({
   title: Yup.string().required('Required'),
@@ -25,7 +25,7 @@ export default function CreatePost() {
         ...values,
         id: cuid(),
         date: new Date().toISOString(),
-        mode: PostMode.Post,
+        mode: 'post',
       };
 
       addPost(payload);

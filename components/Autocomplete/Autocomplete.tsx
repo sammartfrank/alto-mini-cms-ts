@@ -1,3 +1,5 @@
+// @ts-check
+
 'use client';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -15,7 +17,7 @@ export const Autocomplete = () => {
     } else {
       setResults([]);
     }
-  }, [search]);
+  }, [search, posts]);
 
   return (
     <div className='relative'>

@@ -4,19 +4,19 @@ import { useRouter } from 'next/navigation';
 import { MdDeleteOutline, MdCreate } from 'react-icons/md';
 import { MouseEventHandler } from 'react';
 
-import { PostType } from '../../hooks/useLocalStorage';
+import { PostType, usePosts } from '../../hooks/useLocalStorage';
 import { dateFormatted } from './utils';
 
-export const PostCard = ({ post, deletePost }: { post: PostType; deletePost: (id: string) => void }) => {
+export const PostCard = ({ post }: { post: PostType }) => {
+  const { deletePost } = usePosts();
+  const router = useRouter();
   if (!post) return null;
   const { videoId, id, date, title, description } = post;
-  const router = useRouter();
   const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&rel=0`;
 
   const handleOnClick = () => {
     router.push(`/post/${id}`);
   };
-
   const handleOnEdit: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     router.push(`/post/${id}/edit`);
