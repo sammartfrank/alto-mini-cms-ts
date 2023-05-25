@@ -1,15 +1,18 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MdCreate, MdDeleteOutline } from 'react-icons/md';
 
-import { PostType } from '../../../hooks/useLocalStorage';
+import { PostType } from '../../../hooks/useLocaleStorage';
 
 export default function Post() {
   const params = useParams();
+  const router = useRouter();
+
   const { id } = params;
+
   const [post, setPost] = useState<PostType | null>(null);
 
   useEffect(() => {
@@ -45,9 +48,12 @@ export default function Post() {
         </div>
       </div>
       <div className='flex flex-row gap-5 justify-end w-full'>
-        <Link className='bg-zinc-50 hover:bg-zinc-100 text-black font-bold py-2 px-4 rounded text-center' href='/'>
-          Back to home
-        </Link>
+        <button
+          className='bg-zinc-50 hover:bg-zinc-100 text-black font-bold py-2 px-4 rounded text-center'
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
         <Link
           className='bg-zinc-50 hover:bg-zinc-100 text-black font-bold py-2 px-4 rounded text-center'
           href={`/post/${post?.id}/edit`}

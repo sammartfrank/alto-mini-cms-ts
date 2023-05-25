@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 
-import { usePosts } from '../../../hooks/useLocalStorage';
+import { usePostsContext } from 'hooks/PostsContext';
 
 const PostSchema = Yup.object().shape({
   title: Yup.string().required('Required'),
@@ -15,7 +15,7 @@ const PostSchema = Yup.object().shape({
 
 export default function CreatePost() {
   const router = useRouter();
-  const { addPost } = usePosts();
+  const { addPost } = usePostsContext();
 
   const formik = useFormik({
     initialValues: { title: '', content: '', videoId: '', description: '' },

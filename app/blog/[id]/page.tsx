@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { MdCreate, MdDeleteOutline } from 'react-icons/md';
 
-import { PostType } from '../../../hooks/useLocalStorage';
+import { PostType } from '../../../hooks/useLocaleStorage';
 
 export default function EditPost() {
   const params = useParams();

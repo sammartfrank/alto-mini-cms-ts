@@ -1,7 +1,23 @@
 {
-  "extends": ["next/core-web-vitals", "next", "prettier", "eslint:recommended", "plugin:react-hooks/recommended"],
-  "env": {
-    "cypress/globals": true
-  },
-  "plugins": ["cypress"]
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "plugins": ["testing-library", "react-hooks"],
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      "extends": ["plugin:testing-library/react"]
+    }
+  ],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/prop-types": "error",
+    "react/jsx-props-no-spreading": "error",
+    "react/forbid-prop-types": "error",
+    "react/require-default-props": "error",
+    "react/jsx-fragments": "error",
+    "react/jsx-first-prop-new-line": "error"
+  }
 }

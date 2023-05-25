@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link';
 
-import { PostType, usePosts } from '../../../../hooks/useLocalStorage';
+import { PostType } from '../../../../hooks/useLocaleStorage';
+import { usePostsContext } from 'hooks/PostsContext';
 
 const PostSchema = Yup.object().shape({
   title: Yup.string().required('Required'),
@@ -15,25 +15,23 @@ const PostSchema = Yup.object().shape({
 });
 
 export default function EditPost() {
-  const params = useParams();
   const router = useRouter();
-  const { updatePost } = usePosts();
-
-  const { id } = params;
-  const [post, setPost] = useState<PostType | null>(null);
+  const { id } = useParams();
+  const { getPost, updatePost } = usePostsContext();
+  const [post, setPost] = useState<PostType | undefined>();
 
   useEffect(() => {
-    const postsFromLocalStorage = localStorage.getItem('posts');
-    if (postsFromLocalStorage) {
-      const posts: PostType[] = JSON.parse(postsFromLocalStorage!);
-      const postToEdit = posts.find((post) => post.id === id);
-      if (postToEdit) setPost(postToEdit);
-    }
-  }, [id]);
+    const retrievedPost = getPost(id);
+    setPost(retrievedPost);
+  }, [id, getPost]);
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: post || { title: '', content: '', videoId: '', description: '' },
+    initialValues: {
+      title: post?.title || '',
+      videoId: post?.videoId || '',
+      description: post?.description || '',
+    },
     validationSchema: PostSchema,
     onSubmit: (values) => {
       if (post) {
@@ -111,11 +109,12 @@ export default function EditPost() {
           >
             Update
           </button>
-          <Link href='/'>
-            <button className='w-full bg-zinc-500 hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
-              Back
-            </button>
-          </Link>
+          <button
+            className='w-full bg-zinc-500 hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+            onClick={() => router.back()}
+          >
+            Back
+          </button>
         </div>
       </form>
     </div>

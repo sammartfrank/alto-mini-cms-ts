@@ -1,6 +1,8 @@
 {
-  "jest.jestCommandLine": "jest",
-  "jest.rootPath": "app",
+  "jest.jestCommandLine": "test",
+  "jest.rootPath": "./",
   "git.ignoreLimitWarning": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "jest.autoRevealOutput": "off",
+  "jest.autoRun": "off"
 }

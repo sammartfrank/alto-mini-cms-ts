@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
-import { usePosts } from '../../hooks/useLocalStorage';
 import { BlogPostCard } from './BlogPostCard';
+import { usePostsContext } from 'hooks/PostsContext';
 
-export const BlogList = () => {
-  const { posts } = usePosts();
-  const path = usePathname();
+export const BlogList = ({ path }: { path: string }) => {
+  const { posts } = usePostsContext();
+  if (!posts) return null;
 
   const dynamicLayout = `${
     path !== '/blog' ? 'flex flex-row gap-x-4 gap-y-4 flex-wrap' : 'flex flex-col gap-4 w-full'

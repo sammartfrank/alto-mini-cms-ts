@@ -1,14 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { usePosts } from '../hooks/useLocalStorage';
-import { PostsList } from '../components/Post/PostsList';
-import { BlogList } from '../components/Post/BlogList';
+import { usePathname } from 'next/navigation';
+
+import { BlogList } from 'components/Post/BlogList';
+import { PostsList } from 'components/Post/PostsList';
+import { PostsProvider, usePostsContext } from 'hooks/PostsContext';
 
 export default function Home() {
-  const { posts } = usePosts();
+  const { posts } = usePostsContext();
+  const path = usePathname();
 
-  if (!posts) {
+  if (posts.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center min-h-screen py-2'>
         <h1 className='text-4xl font-bold'>You need to create some posts first.</h1>
@@ -22,9 +25,11 @@ export default function Home() {
   }
 
   return (
-    <main className='flex min-hscreen container mx-auto flex-row gap-4 w-full justify-between py-4'>
-      <PostsList />
-      <BlogList />
-    </main>
+    <PostsProvider>
+      <main className='flex min-h-screen container mx-auto flex-row gap-4 w-full justify-between py-4'>
+        <PostsList />
+        <BlogList path={path} />
+      </main>
+    </PostsProvider>
   );
 }
