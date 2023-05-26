@@ -8,7 +8,7 @@ export default function Blog() {
   return (
     <main className='flex min-h-screen flex-col gap-5 p-5'>
       <h1 className='text-4xl font-bold'>Blog posts</h1>
-      <BlogList posts={posts} path='/blog' />
+      <BlogList path='/blog' />
     </main>
   );
 }
