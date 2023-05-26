@@ -4,5 +4,6 @@
   "git.ignoreLimitWarning": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "jest.autoRevealOutput": "off",
-  "jest.autoRun": "off"
+  "jest.autoRun": "off",
+  "github-actions.workflows.pinned.workflows": [".github/workflows/lint-and-build.yml"]
 }
